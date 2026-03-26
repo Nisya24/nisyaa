@@ -4,12 +4,22 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Birthday Surprise 🎂", layout="wide")
 
-# Center button
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
-    start = st.button("🎁 Start Surprise")
+# ================= STATE =================
+if "started" not in st.session_state:
+    st.session_state.started = False
 
-if start:
+# ================= CENTER BUTTON =================
+if not st.session_state.started:
+    st.markdown("<br><br><br><br>", unsafe_allow_html=True)  # spacer biar ke tengah
+
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        if st.button("🎁 Click Here"):
+            st.session_state.started = True
+            st.rerun()
+
+# ================= ANIMATION =================
+if st.session_state.started:
     emojis = ["🎂","🎉","💛","🍫","✨","💖"]
 
     elements = ""
@@ -101,43 +111,14 @@ if start:
         from {{ opacity: 0; transform: translateY(20px); }}
         to {{ opacity: 1; transform: translateY(0); }}
     }}
-
-    /* MUSIC BUTTON */
-    .music-btn {{
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        padding: 10px 15px;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        z-index: 10;
-    }}
     </style>
     </head>
 
     <body>
-
-        <button class="music-btn" onclick="playMusic()">🎵 Play Music</button>
-
-        <audio id="music" loop>
-            <source src="music.mp3" type="audio/mpeg">
-        </audio>
-
-        <script>
-        function playMusic() {{
-            var audio = document.getElementById("music");
-            audio.play();
-        }}
-        </script>
-
         <div class="container">
             {elements}
             <div class="text">🎉 Happy Birthday Rifki 💖</div>
         </div>
-
     </body>
     </html>
     """
