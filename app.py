@@ -8,9 +8,9 @@ st.set_page_config(page_title="Birthday Surprise 🎂", layout="wide")
 if "started" not in st.session_state:
     st.session_state.started = False
 
-# ================= CENTER BUTTON =================
+# ================= BUTTON =================
 if not st.session_state.started:
-    st.markdown("<br><br><br><br>", unsafe_allow_html=True)  # spacer biar ke tengah
+    st.markdown("<br><br><br><br>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
@@ -21,7 +21,6 @@ if not st.session_state.started:
 # ================= ANIMATION =================
 if st.session_state.started:
     emojis = ["🎂","🎉","💛","🍫","✨","💖"]
-
     elements = ""
 
     for i in range(60):
@@ -36,19 +35,6 @@ if st.session_state.started:
             animation-duration:{duration}s;
             animation-delay:{delay}s;">
             {emoji}
-        </div>
-        """
-
-    for i in range(80):
-        left = random.randint(0, 100)
-        duration = random.randint(4, 10)
-        delay = random.randint(0, 5)
-
-        elements += f"""
-        <div class="confetti" style="
-            left:{left}%;
-            animation-duration:{duration}s;
-            animation-delay:{delay}s;">
         </div>
         """
 
@@ -68,6 +54,7 @@ if st.session_state.started:
         height: 100vh;
     }}
 
+    /* FLOATING */
     .floating {{
         position: absolute;
         bottom: -50px;
@@ -75,25 +62,62 @@ if st.session_state.started:
         animation: floatUp linear infinite;
     }}
 
-    .confetti {{
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: black;
-        bottom: -10px;
-        animation: confettiFall linear infinite;
-    }}
-
     @keyframes floatUp {{
         0% {{ transform: translateY(0); opacity:1; }}
         100% {{ transform: translateY(-110vh); opacity:0; }}
     }}
 
-    @keyframes confettiFall {{
-        0% {{ transform: translateY(0) rotate(0deg); }}
-        100% {{ transform: translateY(-110vh) rotate(720deg); }}
+    /* CAKE */
+    .cake {{
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 120px;
+        background: pink;
+        border-radius: 50% 50% 40% 40%;
+        text-align: center;
+        font-size: 40px;
+        padding-top: 30px;
+        animation: cakeIn 1s ease;
     }}
 
+    @keyframes cakeIn {{
+        from {{ transform: translate(-50%, -60%) scale(0.5); opacity:0; }}
+        to {{ transform: translate(-50%, -50%) scale(1); opacity:1; }}
+    }}
+
+    /* CANDLE */
+    .candle {{
+        position: absolute;
+        top: -20px;
+        font-size: 20px;
+        animation: flame 1s infinite alternate;
+    }}
+
+    @keyframes flame {{
+        from {{ opacity:1; }}
+        to {{ opacity:0.5; }}
+    }}
+
+    /* CONFETTI EXPLOSION */
+    .confetti {{
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: black;
+        top: 50%;
+        left: 50%;
+        animation: explode 1s ease forwards;
+    }}
+
+    @keyframes explode {{
+        0% {{ transform: translate(0,0); opacity:1; }}
+        100% {{ transform: translate(var(--x), var(--y)); opacity:0; }}
+    }}
+
+    /* TEXT */
     .text {{
         position: absolute;
         top: 40%;
@@ -104,7 +128,7 @@ if st.session_state.started:
         font-weight: bold;
         opacity: 0;
         animation: fadeIn 2s ease forwards;
-        animation-delay: 1s;
+        animation-delay: 4s;
     }}
 
     @keyframes fadeIn {{
@@ -115,10 +139,43 @@ if st.session_state.started:
     </head>
 
     <body>
-        <div class="container">
-            {elements}
-            <div class="text">🎉 Happy Birthday Rifki 💖</div>
+
+    <div class="container">
+
+        {elements}
+
+        <!-- CAKE -->
+        <div id="cake" class="cake">
+            19
+            <div id="flame" class="candle">🔥</div>
         </div>
+
+        <!-- TEXT -->
+        <div class="text">🎉 Happy Birthday Rifki 💖</div>
+
+    </div>
+
+    <script>
+    setTimeout(() => {{
+        // matiin api
+        document.getElementById("flame").innerHTML = "💨";
+    }}, 2000);
+
+    setTimeout(() => {{
+        // hilangin cake
+        document.getElementById("cake").style.display = "none";
+
+        // ledakan confetti
+        for (let i = 0; i < 80; i++) {{
+            let c = document.createElement("div");
+            c.className = "confetti";
+            c.style.setProperty('--x', (Math.random()*400-200)+'px');
+            c.style.setProperty('--y', (Math.random()*400-200)+'px');
+            document.body.appendChild(c);
+        }}
+    }}, 3000);
+    </script>
+
     </body>
     </html>
     """
