@@ -13,7 +13,7 @@ if not st.session_state.started:
     st.markdown("<br><br><br><br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        if st.button("🎁 Start Surprise"):
+        if st.button("🎁 Click Here"):
             st.session_state.started = True
             st.rerun()
 
@@ -54,27 +54,21 @@ if st.session_state.started:
         height:100vh;
     }}
 
-    /* 🎈 FLOATING EMOJI */
-    .floating {{
-        position:absolute;
-        bottom:-50px;
-        font-size:28px;
-        animation: floatUp linear infinite;
-    }}
-
-    @keyframes floatUp {{
-        0% {{ transform:translateY(0); opacity:1; }}
-        100% {{ transform:translateY(-110vh); opacity:0; }}
-    }}
-
-    /* 🎂 CAKE */
+    /* 🎂 CAKE POP OUT */
     .cake {{
         position:absolute;
         top:50%;
         left:50%;
-        transform:translate(-50%, -50%);
+        transform:translate(-50%, -50%) scale(0.3);
         width:240px;
         height:150px;
+        animation:popOut 1.5s ease forwards;
+    }}
+
+    @keyframes popOut {{
+        0% {{ transform:translate(-50%, -50%) scale(0.3); opacity:0; }}
+        60% {{ transform:translate(-50%, -50%) scale(1.2); }}
+        100% {{ transform:translate(-50%, -50%) scale(1); opacity:1; }}
     }}
 
     .layer-bottom {{
@@ -114,7 +108,7 @@ if st.session_state.started:
         left:-20px;
     }}
 
-    /* 🔢 NUMBER CANDLES */
+    /* 🔢 NUMBER */
     .number {{
         position:absolute;
         top:-50px;
@@ -125,18 +119,18 @@ if st.session_state.started:
     .one {{ left:70px; }}
     .nine {{ left:130px; }}
 
-    /* 🔥 BIG FLAME */
+    /* 🔥 FLAME */
     .flame {{
         position:absolute;
         top:-30px;
         left:5px;
-        font-size:24px;
+        font-size:26px;
         animation:flicker 0.4s infinite alternate;
     }}
 
     @keyframes flicker {{
-        from {{ transform:scale(1); opacity:1; }}
-        to {{ transform:scale(1.2); opacity:0.6; }}
+        from {{ transform:scale(1); }}
+        to {{ transform:scale(1.3); }}
     }}
 
     /* 💥 CONFETTI */
@@ -155,6 +149,24 @@ if st.session_state.started:
         100% {{ transform:translate(var(--x), var(--y)); opacity:0; }}
     }}
 
+    /* 🎈 FLOATING (MUNCUL BELAKANGAN) */
+    .floating {{
+        position:absolute;
+        bottom:-50px;
+        font-size:28px;
+        animation: floatUp linear infinite;
+        opacity:0;
+    }}
+
+    .show-bg .floating {{
+        opacity:1;
+    }}
+
+    @keyframes floatUp {{
+        0% {{ transform:translateY(0); opacity:1; }}
+        100% {{ transform:translateY(-110vh); opacity:0; }}
+    }}
+
     /* 🎉 TEXT */
     .text {{
         position:absolute;
@@ -165,8 +177,10 @@ if st.session_state.started:
         color:black;
         font-weight:bold;
         opacity:0;
+    }}
+
+    .show-bg .text {{
         animation:fadeIn 2s ease forwards;
-        animation-delay:4s;
     }}
 
     @keyframes fadeIn {{
@@ -179,35 +193,34 @@ if st.session_state.started:
 
     <body>
 
-    <div class="container">
+    <div id="main" class="container">
 
         {floating}
 
-        <!-- 🎂 CAKE -->
+        <!-- CAKE -->
         <div id="cake" class="cake">
             <div class="layer-top"></div>
             <div class="layer-middle"></div>
             <div class="layer-bottom"></div>
             <div class="plate"></div>
 
-            <!-- 🔢 lilin angka -->
             <div class="number one">1<div class="flame">🔥</div></div>
             <div class="number nine">9<div class="flame">🔥</div></div>
         </div>
 
-        <!-- 🎉 TEXT -->
+        <!-- TEXT -->
         <div class="text">🎉 Happy Birthday Rifki 💖</div>
 
     </div>
 
     <script>
 
-    // 💨 tiup lilin
+    // 💨 tiup
     setTimeout(() => {{
         document.querySelectorAll(".flame").forEach(f => f.innerHTML = "💨");
     }}, 2000);
 
-    // 💥 ledakan
+    // 💥 explode + munculin bg + teks
     setTimeout(() => {{
         document.getElementById("cake").style.display = "none";
 
@@ -218,6 +231,10 @@ if st.session_state.started:
             c.style.setProperty('--y', (Math.random()*500-250)+'px');
             document.body.appendChild(c);
         }}
+
+        // aktifin background + text
+        document.getElementById("main").classList.add("show-bg");
+
     }}, 3000);
 
     </script>
